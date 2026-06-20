@@ -6,22 +6,13 @@
 [![npm](https://img.shields.io/npm/v/mcp-vitals.svg)](https://www.npmjs.com/package/mcp-vitals)
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/shaxzodbek-uzb/mcp-vitals/main/assets/hero.svg" alt="mcp-vitals — benchmark MCP tool-call latency (p50/p95/p99) and gate CI on a latency budget" width="900">
+</p>
+
 ```bash
-# Benchmark a tool's latency — no install, no API key
-npx mcp-vitals bench --tool search --args '{"q":"hello"}' npx your-mcp-server
-```
-
-```
-Target: search (tool)
-Server: npx your-mcp-server via stdio
-Load:   50 iters, concurrency 1, warmup 1
-
-Cold start  41.8 ms
-
-   min    mean     p50     p90     p95     p99     max  stddev
- 6.1 ms  8.0 ms  7.6 ms  9.9 ms  11.4 ms  18.7 ms  22.0 ms  2.4 ms
-
-50 completed · 124.6 req/s · 0 errors
+# Benchmark a tool's latency and fail CI if it's too slow — no install, no API key
+npx mcp-vitals bench --tool search --fail-on 'p95<200ms' npx your-mcp-server
 ```
 
 ---

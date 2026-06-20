@@ -1,0 +1,67 @@
+<svg width="1200" height="500" viewBox="0 0 1200 500" role="img" xmlns="http://www.w3.org/2000/svg" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'Liberation Mono',monospace">
+  <title>mcp-vitals — benchmark MCP tool-call latency and gate CI</title>
+  <desc>Terminal showing mcp-vitals bench output: a latency distribution (p50 7.6ms, p95 11.4ms, p99 18.7ms) with throughput and a passing latency SLA.</desc>
+
+  <rect x="2" y="2" width="1196" height="496" rx="18" fill="#0e1117" stroke="#232b36" stroke-width="2"/>
+
+  <!-- title bar -->
+  <line x1="2" y1="60" x2="1198" y2="60" stroke="#1c232d" stroke-width="2"/>
+  <circle cx="34" cy="31" r="7" fill="#ff5f57"/>
+  <circle cx="58" cy="31" r="7" fill="#febc2e"/>
+  <circle cx="82" cy="31" r="7" fill="#28c840"/>
+  <text x="120" y="38" font-size="22" font-weight="700" fill="#5eead4">mcp-vitals</text>
+  <text x="258" y="38" font-size="18" fill="#5b6675">vital signs for your MCP server</text>
+
+  <!-- heartbeat motif (top right) -->
+  <polyline points="940,31 985,31 1000,31 1010,14 1022,50 1035,31 1086,31 1100,31 1110,21 1120,41 1130,31 1166,31"
+            fill="none" stroke="#34d399" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- command -->
+  <text x="40" y="112" font-size="23">
+    <tspan fill="#34d399">$ </tspan><tspan fill="#e6edf3" font-weight="700">npx mcp-vitals bench</tspan><tspan fill="#e6edf3"> --tool </tspan><tspan fill="#fbbf24">search</tspan><tspan fill="#e6edf3"> -n 200 </tspan><tspan fill="#7d8896">npx your-server</tspan>
+  </text>
+
+  <!-- cold start -->
+  <text x="40" y="158" font-size="20">
+    <tspan fill="#7d8896">Cold start  </tspan><tspan fill="#e6edf3">41.8 ms</tspan><tspan fill="#5b6675">    ·  200 calls · warmup 5</tspan>
+  </text>
+
+  <!-- p95 highlight panel -->
+  <rect x="430" y="196" width="156" height="106" rx="10" fill="#1a2230" stroke="#fbbf24" stroke-width="1.5"/>
+
+  <!-- stat columns: label (dim) over value (mint) -->
+  <g text-anchor="middle">
+    <text x="160" y="232" font-size="17" fill="#7d8896">min</text>
+    <text x="160" y="272" font-size="28" font-weight="700" fill="#5eead4">6.1ms</text>
+
+    <text x="295" y="232" font-size="17" fill="#7d8896">p50</text>
+    <text x="295" y="272" font-size="28" font-weight="700" fill="#5eead4">7.6ms</text>
+
+    <text x="508" y="228" font-size="17" font-weight="700" fill="#fbbf24">p95</text>
+    <text x="508" y="270" font-size="30" font-weight="700" fill="#fbbf24">11.4ms</text>
+    <text x="508" y="293" font-size="13" fill="#a78b4a">SLA gate</text>
+
+    <text x="700" y="232" font-size="17" fill="#7d8896">p99</text>
+    <text x="700" y="272" font-size="28" font-weight="700" fill="#5eead4">18.7ms</text>
+
+    <text x="850" y="232" font-size="17" fill="#7d8896">max</text>
+    <text x="850" y="272" font-size="28" font-weight="700" fill="#5eead4">22.0ms</text>
+
+    <text x="1000" y="232" font-size="17" fill="#7d8896">stddev</text>
+    <text x="1000" y="272" font-size="28" font-weight="700" fill="#5eead4">2.4ms</text>
+  </g>
+
+  <line x1="40" y1="332" x2="1160" y2="332" stroke="#1c232d" stroke-width="2"/>
+
+  <!-- throughput + pass line -->
+  <text x="40" y="378" font-size="20">
+    <tspan fill="#e6edf3" font-weight="700">200</tspan><tspan fill="#7d8896"> completed  ·  </tspan><tspan fill="#e6edf3" font-weight="700">124.6</tspan><tspan fill="#7d8896"> req/s  ·  </tspan><tspan fill="#34d399" font-weight="700">0 errors</tspan>
+  </text>
+  <text x="40" y="412" font-size="20">
+    <tspan fill="#34d399" font-weight="700">✓ PASS</tspan><tspan fill="#7d8896">  p95 11.4ms &lt; 200ms budget  —  </tspan><tspan fill="#34d399">exit 0</tspan>
+  </text>
+
+  <!-- value prop strip -->
+  <text x="40" y="462" font-size="18" fill="#5b6675">inspect  ·  benchmark latency (p50/p95/p99)  ·  gate CI on a budget  ·  no LLM key</text>
+  <text x="1160" y="462" font-size="18" text-anchor="end" fill="#7d8896">npm i -g mcp-vitals</text>
+</svg>
