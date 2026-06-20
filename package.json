@@ -1,6 +1,6 @@
 {
   "name": "mcp-vitals",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Vital signs for your MCP server: inspect capabilities, benchmark tool-call latency (p50/p95/p99), and assert health in CI. The ab/k6/pytest for MCP servers — non-interactive, scriptable, LLM-free.",
   "keywords": [
     "mcp",
