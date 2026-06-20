@@ -1,0 +1,40 @@
+# Example mcp-vitals assertion suite.
+#
+# This one targets the repo's test fixture so you can run it from the repo root:
+#   npx mcp-vitals check -c examples/mcp-vitals.yaml
+#
+# In your own project, commit a `mcp-vitals.yaml` next to your server and run
+# `npx mcp-vitals check` (it auto-discovers the file). See README for the full
+# field reference, or get editor IntelliSense via the $schema line below.
+$schema: https://unpkg.com/mcp-vitals/schema/assertions.schema.json
+
+# How to launch the server under test. Use `url:` + `headers:` for HTTP/SSE.
+server:
+  command: npx
+  args: ["tsx", "tests/fixtures/fixture-server.ts"]
+  transport: stdio
+  connectTimeoutMs: 10000
+
+# Defaults applied to every latency bench (override per-assertion or via CLI).
+defaults:
+  iterations: 50
+  warmup: 3
+  concurrency: 1
+
+# Capabilities that must be present, and whether every listed tool's
+# inputSchema must be valid JSON Schema.
+expect:
+  tools: [echo, slow, bmi]
+  schemasValid: true
+
+# Latency SLAs. Each entry runs a bench and gates on the declared thresholds.
+latency:
+  - id: echo-fast
+    tool: echo
+    args: { text: "ping" }
+    p95: 50ms
+    errorRate: 0
+
+  - id: handshake
+    probe: listTools
+    p95: 100ms

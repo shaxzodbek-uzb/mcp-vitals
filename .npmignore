@@ -1,0 +1,15 @@
+# The `files` allowlist in package.json governs what is published; this is a
+# belt-and-suspenders exclude list for anything that slips through.
+src/
+tests/
+examples/
+.github/
+*.tsbuildinfo
+tsconfig*.json
+vitest.config.ts
+eslint.config.js
+.editorconfig
+.gitattributes
+SPEC.md
+CONTRIBUTING.md
+coverage/

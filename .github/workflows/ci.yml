@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [20, 22]
+    name: node ${{ matrix.node }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm run build
+      - run: npm test
+
+      # Dogfood: run mcp-vitals against its own fixture server and emit JUnit.
+      - name: dogfood check
+        run: node bin/mcp-vitals.js check -c examples/mcp-vitals.yaml --junit mcp-vitals-report.xml --no-color
+      - name: dogfood bench gate
+        run: >-
+          node bin/mcp-vitals.js bench --tool echo --args '{"text":"ci"}'
+          -n 50 -w 5 --fail-on 'p95<500ms' --fail-on 'errorRate<=0' --no-color
+          node_modules/.bin/tsx tests/fixtures/fixture-server.ts
+
+      - name: upload JUnit report
+        if: always() && matrix.node == 20
+        uses: actions/upload-artifact@v4
+        with:
+          name: mcp-vitals-report
+          path: mcp-vitals-report.xml
+          if-no-files-found: warn

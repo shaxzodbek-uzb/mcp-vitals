@@ -1,0 +1,31 @@
+# Drop this into .github/workflows/mcp-vitals.yml to gate your MCP server's
+# health and latency on every PR. mcp-vitals exits non-zero when an assertion
+# fails, so the job goes red on a missing tool, an invalid schema, or a blown
+# latency budget.
+name: mcp-vitals
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  vitals:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - run: npm ci
+      - run: npm run build # build your MCP server if needed
+
+      # Run the committed mcp-vitals.yaml suite and emit JUnit for the UI.
+      - run: npx mcp-vitals check --junit mcp-vitals-report.xml
+
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mcp-vitals-report
+          path: mcp-vitals-report.xml

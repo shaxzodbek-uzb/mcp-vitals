@@ -1,0 +1,29 @@
+# dependencies
+node_modules/
+
+# build output
+dist/
+*.tsbuildinfo
+
+# logs
+*.log
+npm-debug.log*
+
+# test / coverage
+coverage/
+.nyc_output/
+*-report.xml
+report.xml
+
+# npm pack output
+*.tgz
+
+# editor / OS
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# env
+.env
+.env.local
