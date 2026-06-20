@@ -7,7 +7,7 @@
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/shaxzodbek-uzb/mcp-vitals/main/assets/hero.svg" alt="mcp-vitals — benchmark MCP tool-call latency (p50/p95/p99) and gate CI on a latency budget" width="900">
+  <img src="https://raw.githubusercontent.com/shaxzodbek-uzb/mcp-vitals/main/assets/hero.png" alt="mcp-vitals — benchmark MCP tool-call latency (p50/p95/p99) and gate CI on a latency budget" width="900">
 </p>
 
 ```bash
