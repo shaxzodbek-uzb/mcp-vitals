@@ -4,7 +4,7 @@
 
 - **Package:** `mcp-vitals` (npm) · **bin:** `mcp-vitals`
 - **Run:** `npx mcp-vitals bench npx your-server`
-- **Author:** Shaxzodbek Sobirov <shaxzodbek@blaze.uz> · github.com/shaxzodbek-uzb/mcp-vitals · MIT
+- **Author:** Shaxzodbek Qambaraliyev <shaxzodbek@blaze.uz> · github.com/shaxzodbek-uzb/mcp-vitals · MIT
 - **Runtime:** Node 20+, npm 10. ESM (`"type": "module"`, NodeNext).
 - **SDK:** `@modelcontextprotocol/sdk@^1.29` (subpath imports with `.js` extensions).
 

@@ -219,4 +219,4 @@ See [CONTRIBUTING.md](CONTRIBUTING.md). Issues and PRs welcome.
 
 ## License
 
-[MIT](LICENSE) © Shaxzodbek Sobirov / Blaze
+[MIT](LICENSE) © Shaxzodbek Qambaraliyev / Blaze
