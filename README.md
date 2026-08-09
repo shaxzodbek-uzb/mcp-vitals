@@ -2,7 +2,6 @@
 
 > **Vital signs for your MCP server.** Inspect capabilities, **benchmark tool-call latency (p50/p95/p99)**, and **assert health in CI** — the `ab` / `k6` / `pytest` for [Model Context Protocol](https://modelcontextprotocol.io) servers. Non-interactive, scriptable, no LLM key required.
 
-[![CI](https://github.com/shaxzodbek-uzb/mcp-vitals/actions/workflows/ci.yml/badge.svg)](https://github.com/shaxzodbek-uzb/mcp-vitals/actions/workflows/ci.yml)
 [![npm](https://img.shields.io/npm/v/mcp-vitals.svg)](https://www.npmjs.com/package/mcp-vitals)
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
