@@ -27,6 +27,7 @@ There are great tools for *exploring* an MCP server interactively. There is noth
 | **Latency percentiles (p50/p95/p99)** | ❌ | ❌ | ❌ | **✅** |
 | **Concurrency / throughput load** | ❌ | ❌ | ❌ | **✅** |
 | **Gate a PR on a latency budget** | ❌ | ❌ | ❌ | **✅** |
+| **Gate a PR on a latency _regression_** | ❌ | ❌ | ❌ | **✅** |
 | LLM-free (no API key) | ✅ | ❌ | ✅ | ✅ |
 | `npx`-installable | ✅ | ✅ | cargo | ✅ |
 | JUnit + JSON reporters | ❌ | ✅ | partial | ✅ |
@@ -64,6 +65,54 @@ mcp-vitals bench --probe listTools npx your-mcp-server
 ```
 
 Reports `min / mean / p50 / p90 / p95 / p99 / max / stddev`, cold-start, throughput, and error rate. `--json` emits the full distribution for dashboards.
+
+### `compare` — catch a regression the budget misses
+
+A latency budget (`--fail-on 'p95<200ms'`) catches a server that is slow in absolute
+terms. It cannot catch the more common case: a change that makes a tool **40% slower**
+while still sitting comfortably inside a generous budget. That needs the previous run to
+compare against.
+
+```bash
+# on main, once — commit the result
+mcp-vitals bench --tool search -n 200 --json npx your-server > baseline.json
+
+# on every PR
+mcp-vitals bench --tool search -n 200 --json npx your-server \
+  | mcp-vitals compare baseline.json --fail-on 'p95>+10%'
+```
+
+```console
+metric  baseline  current     delta  change
+p50      11.0 ms  13.0 ms   +2.0 ms  +18.2%  within noise
+p90      17.0 ms  24.0 ms   +7.0 ms  +41.2%
+p95      20.0 ms  29.0 ms   +9.0 ms  +45.0%
+p99      28.0 ms  44.0 ms  +16.0 ms  +57.1%
+
+Cold start  120 ms → 138 ms  +15.0%
+
+  FAIL  p95>+10%  actual +45.0%
+```
+
+Bounds are **relative to the baseline** — `+10%`, `+20ms`, `+1s`. An absolute budget is
+what `bench --fail-on` already does, and accepting both here would make `p95>200`
+ambiguous between *"200ms slower"* and *"over 200ms"*.
+
+`--markdown` renders a table that pastes straight into a PR comment:
+
+```yaml
+- run: mcp-vitals bench --tool search -n 200 --json npx your-server > current.json
+- run: mcp-vitals compare baseline.json current.json --markdown --fail-on 'p95>+10%' > comment.md
+```
+
+**About noise.** Two benchmark runs of the same code differ. `compare` marks any change
+inside one standard deviation of the baseline as `within noise` — including on gates that
+*passed* — and warns when the baseline has fewer than 20 samples, because percentiles that
+short are dominated by which iterations happened to be slow. If a gate flaps, the run is
+too small or the threshold is inside the noise floor; raise `-n` before loosening it.
+
+A metric missing from either run passes rather than fails: *"the baseline predates this
+metric"* should not be a red build.
 
 ### `check` — the CI gate
 
@@ -182,10 +231,18 @@ Every command supports `--json` for a single, self-contained object on stdout (e
 mcp-vitals bench --tool search -n 100 --json npx your-mcp-server | jq '.warm.p95'
 ```
 
+That same object is what `compare` reads, so a benchmark can be piped straight into a
+regression gate:
+
+```bash
+mcp-vitals bench --tool search -n 200 --json npx your-mcp-server \
+  | mcp-vitals compare baseline.json --fail-on 'p95>+10%'
+```
+
 ## Library use
 
 ```ts
-import { Connection, runBench, computeStats } from 'mcp-vitals';
+import { Connection, runBench, computeStats, compareRuns, parseRegressionExpr } from 'mcp-vitals';
 
 const conn = await Connection.connect({
   command: 'npx', args: ['your-mcp-server'], headers: {}, env: {},
@@ -202,6 +259,8 @@ await conn.close();
 ## Notes on benchmarking
 
 Latency numbers are only as stable as the host. Run benchmarks on a quiet machine, always keep a warmup (cold-start is reported separately), and watch `stddev` to spot a noisy environment. mcp-vitals' own test suite gates on **relative** ordering, not absolute milliseconds — a good practice for your CI thresholds too (set budgets with headroom).
+
+This applies double to [`compare`](#compare--catch-a-regression-the-budget-misses): a regression gate is a difference of two noisy measurements, so its noise floor is *wider* than either run's. `compare` marks changes inside one baseline standard deviation as `within noise` and warns on baselines under 20 samples, but it can only tell you the number is unreliable — it can't make it reliable. Raise `-n` before tightening a threshold.
 
 ## Contributing
 

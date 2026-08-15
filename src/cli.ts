@@ -7,6 +7,7 @@ import { runInspect } from './commands/inspect.js';
 import { runPing } from './commands/ping.js';
 import { runBenchCommand } from './commands/bench.js';
 import { runCall } from './commands/call.js';
+import { runCompare } from './commands/compare.js';
 import { runCheck } from './commands/check.js';
 
 const require = createRequire(import.meta.url);
@@ -109,6 +110,21 @@ export function buildProgram(): Command {
     .option('--raw', 'print only the tool result content (for piping)')
     .option('--expect-error', 'exit 0 only if the call returns an MCP tool error')
     .action(action((server, opts) => runCall(server, opts as never)));
+
+  // No connection options: compare reads two JSON files and never touches a server.
+  addOutputOptions(
+    program
+      .command('compare')
+      .description('diff two `bench --json` runs and gate on a latency regression')
+      .argument('<baseline>', 'baseline bench JSON file')
+      .argument('[current]', "current bench JSON file ('-' or omitted = stdin)"),
+  )
+    .option('--fail-on <expr>', "regression gate relative to baseline, e.g. 'p95>+10%' (repeatable)", collect, [])
+    .option('--markdown', 'render a table suited to a PR comment', false)
+    .action(async (baseline: string, current: string | undefined, opts: Record<string, unknown>) => {
+      const code = await runCompare(current ? [baseline, current] : [baseline], opts as never);
+      if (code) process.exitCode = code;
+    });
 
   withCommon(
     program

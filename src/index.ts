@@ -7,6 +7,8 @@ export { runBench } from './bench/engine.js';
 export type { BenchHooks } from './bench/engine.js';
 export { computeStats, percentile } from './stats.js';
 export { parseExpr, parseDuration, evaluate, evaluateExpr } from './thresholds.js';
+export { compareRuns, parseRegressionExpr, asBenchRun } from './compare.js';
+export type { BenchRun, Comparison, MetricDelta, RegressionOutcome } from './compare.js';
 export { validateJsonSchema } from './schema.js';
 export { loadConfig, discoverConfig } from './assertions/loader.js';
 export { runChecks } from './assertions/run.js';
