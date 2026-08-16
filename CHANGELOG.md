@@ -6,6 +6,25 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.2.0] — 2026-08-16
+
+### Added
+- **`mcp-vitals compare`** — diff two `bench --json` runs and gate CI on a
+  *regression*, not just on an absolute budget. A budget catches "this got slow";
+  it does not catch "this got 40% slower but is still under the ceiling", which is
+  the change you actually want to review.
+- `--fail-on <expr>` takes a bound relative to the baseline, e.g. `p95>+10%` or
+  `mean>+5ms`, and is repeatable. Exits non-zero when any bound is crossed.
+- `--markdown` renders a table suited to a PR comment; `--json` gives the machine
+  form. Per-tool rows are included, so a repo-wide average can't hide one tool
+  that doubled.
+- `compare` never connects to a server — it reads two JSON files, and `-` or an
+  omitted second argument reads the current run from stdin.
+
+### Notes
+- Run-to-run variance is real. A gate that flaps is telling you the sample is too
+  small; raise `-n` rather than loosening the bound.
+
 ## [0.1.1] — 2026-06-20
 
 ### Changed

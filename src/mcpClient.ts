@@ -1,3 +1,5 @@
+import { createRequire } from 'node:module';
+
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import type {
   CapabilitySummary,
@@ -12,7 +14,11 @@ import type {
 import { createTransport, describeTarget, inferKind } from './transport.js';
 import { ConnectionError } from './errors.js';
 
-const CLIENT_INFO = { name: 'mcp-vitals', version: '0.1.0' };
+// Read from package.json rather than a literal: this is what we tell servers we
+// are during the MCP handshake, and a hand-maintained copy goes stale silently —
+// as it did through 0.1.1, which introduced itself as 0.1.0.
+const pkg = createRequire(import.meta.url)('../package.json') as { version: string };
+const CLIENT_INFO = { name: 'mcp-vitals', version: pkg.version };
 
 export interface CallResult {
   content: unknown[];
